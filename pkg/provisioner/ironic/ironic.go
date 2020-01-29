@@ -554,6 +554,7 @@ func getFirmwareDetails(firmwaredata introspection.ExtraHardwareDataSection) met
 }
 
 func getHardwareDetails(data *introspection.Data) *metal3v1alpha1.HardwareDetails {
+	fmt.Println("***********Entering here")
 	details := new(metal3v1alpha1.HardwareDetails)
 	details.Firmware = getFirmwareDetails(data.Extra.Firmware)
 	details.SystemVendor = getSystemVendorDetails(data.Inventory.SystemVendor)
@@ -562,6 +563,7 @@ func getHardwareDetails(data *introspection.Data) *metal3v1alpha1.HardwareDetail
 	details.Storage = getStorageDetails(data.Inventory.Disks)
 	details.CPU = getCPUDetails(&data.Inventory.CPU)
 	details.Hostname = data.Inventory.Hostname
+	fmt.Println(data.Inventory.Boot.CurrentBootMode)
 	return details
 }
 
@@ -618,7 +620,6 @@ func (p *ironicProvisioner) InspectHardware() (result provisioner.Result, detail
 		return
 	}
 	p.log.Info("**********received introspection data", "data", introData.Body)
-	fmt.Println(data)
 	details = getHardwareDetails(data)
 	p.publisher("InspectionComplete", "Hardware inspection completed")
 	return
