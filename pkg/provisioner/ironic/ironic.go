@@ -617,10 +617,10 @@ func (p *ironicProvisioner) InspectHardware() (result provisioner.Result, detail
 		err = errors.Wrap(err, "failed to retrieve hardware introspection data")
 		return
 	}
-	p.log.Info("received introspection data", "data", introData.Body)
+	p.log.Info("********************received introspection data", "data", introData.Body)
 
 	details = getHardwareDetails(data)
-	p.log.Info("Revieved NUMA details", "data", details)
+	p.log.Info("******************Revieved NUMA details")
 	fmt.Println("Printing NUMA details", details)
 	p.publisher("InspectionComplete", "Hardware inspection completed")
 	return
