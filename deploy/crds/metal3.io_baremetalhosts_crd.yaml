@@ -282,6 +282,8 @@ spec:
                   type: object
                 hostname:
                   type: string
+                currentbootmode:
+                  type: string
                 nics:
                   items:
                     description: NIC describes one network interface on the host.
@@ -398,6 +400,7 @@ spec:
               - cpu
               - firmware
               - hostname
+              - currentbootmode
               - nics
               - ramMebibytes
               - storage
