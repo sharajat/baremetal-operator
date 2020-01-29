@@ -563,7 +563,10 @@ func getHardwareDetails(data *introspection.Data) *metal3v1alpha1.HardwareDetail
 	details.Storage = getStorageDetails(data.Inventory.Disks)
 	details.CPU = getCPUDetails(&data.Inventory.CPU)
 	details.Hostname = data.Inventory.Hostname
-	fmt.Println(data.Inventory.Boot.CurrentBootMode)
+	details.CurrentBootMode = data.Inventory.Boot.CurrentBootMode
+	fmt.Println("**************************Jaadu****************")
+	fmt.Println(details.CurrentBootMode)
+	fmt.Println(details)
 	return details
 }
 
