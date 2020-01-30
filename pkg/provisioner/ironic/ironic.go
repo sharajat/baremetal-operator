@@ -621,8 +621,9 @@ func (p *ironicProvisioner) InspectHardware() (result provisioner.Result, detail
 
 	details = getHardwareDetails(data)
 	p.log.Info("******************Revieved NUMA details")
-	fmt.Println("Printing NUMA details", details)
-	fmt.Println("Printing DATA details", data)
+	//fmt.Println("Printing NUMA details", details)
+	fmt.Println("******************************Printing DATA details")
+	fmt.Println(data.NumaTopology)
 	p.publisher("InspectionComplete", "Hardware inspection completed")
 	return
 }
