@@ -554,7 +554,6 @@ func getFirmwareDetails(firmwaredata introspection.ExtraHardwareDataSection) met
 }
 
 func getHardwareDetails(data *introspection.Data) *metal3v1alpha1.HardwareDetails {
-	fmt.Println("***********Entering here")
 	details := new(metal3v1alpha1.HardwareDetails)
 	details.Firmware = getFirmwareDetails(data.Extra.Firmware)
 	details.SystemVendor = getSystemVendorDetails(data.Inventory.SystemVendor)
@@ -564,9 +563,6 @@ func getHardwareDetails(data *introspection.Data) *metal3v1alpha1.HardwareDetail
 	details.CPU = getCPUDetails(&data.Inventory.CPU)
 	details.Hostname = data.Inventory.Hostname
 	details.CurrentBootMode = data.Inventory.Boot.CurrentBootMode
-	fmt.Println("**************************Jaadu****************")
-	fmt.Println(details.CurrentBootMode)
-	fmt.Println(details)
 	return details
 }
 
@@ -575,7 +571,7 @@ func getHardwareDetails(data *introspection.Data) *metal3v1alpha1.HardwareDetail
 // multiple times, and should return true for its dirty flag until the
 // inspection is completed.
 func (p *ironicProvisioner) InspectHardware() (result provisioner.Result, details *metal3v1alpha1.HardwareDetails, err error) {
-	p.log.Info("********inspecting hardware", "status", p.host.OperationalStatus())
+	p.log.Info("inspecting hardware", "status", p.host.OperationalStatus())
 
 	ironicNode, err := p.findExistingHost()
 	if err != nil {
@@ -589,13 +585,13 @@ func (p *ironicProvisioner) InspectHardware() (result provisioner.Result, detail
 	status, err := introspection.GetIntrospectionStatus(p.inspector, ironicNode.UUID).Extract()
 	if err != nil {
 		if _, isNotFound := err.(gophercloud.ErrDefault404); isNotFound {
-			p.log.Info("*********starting new hardware inspection")
+			p.log.Info("starting new hardware inspection")
 			result, err = p.changeNodeProvisionState(
 				ironicNode,
 				nodes.ProvisionStateOpts{Target: nodes.TargetInspect},
 			)
 			if err == nil {
-				p.publisher("*******InspectionStarted", "Hardware inspection started")
+				p.publisher("InspectionStarted", "Hardware inspection started")
 			}
 			return
 		}
@@ -615,14 +611,14 @@ func (p *ironicProvisioner) InspectHardware() (result provisioner.Result, detail
 	}
 
 	// Introspection is done
-	p.log.Info("******getting hardware details from inspection")
+	p.log.Info("getting hardware details from inspection")
 	introData := introspection.GetIntrospectionData(p.inspector, ironicNode.UUID)
 	data, err := introData.Extract()
 	if err != nil {
 		err = errors.Wrap(err, "failed to retrieve hardware introspection data")
 		return
 	}
-	p.log.Info("**********received introspection data", "data", introData.Body)
+	p.log.Info("received introspection data", "data", introData.Body)
 	details = getHardwareDetails(data)
 	p.publisher("InspectionComplete", "Hardware inspection completed")
 	return
